@@ -21,29 +21,34 @@ variable "configure_management_resources" {
           enable_solution_for_agent_health_assessment       = optional(bool, true)
           enable_solution_for_anti_malware                  = optional(bool, true)
           enable_solution_for_change_tracking               = optional(bool, true)
-          enable_solution_for_service_map                   = optional(bool, true)
+          enable_solution_for_service_map                   = optional(bool, false)
           enable_solution_for_sql_assessment                = optional(bool, true)
           enable_solution_for_sql_vulnerability_assessment  = optional(bool, true)
           enable_solution_for_sql_advanced_threat_detection = optional(bool, true)
           enable_solution_for_updates                       = optional(bool, true)
           enable_solution_for_vm_insights                   = optional(bool, true)
+          enable_solution_for_container_insights            = optional(bool, true)
           enable_sentinel                                   = optional(bool, true)
         }), {})
       }), {})
       security_center = optional(object({
         enabled = optional(bool, true)
         config = optional(object({
-          email_security_contact             = optional(string, "security_contact@replace_me")
-          enable_defender_for_app_services   = optional(bool, true)
-          enable_defender_for_arm            = optional(bool, true)
-          enable_defender_for_containers     = optional(bool, true)
-          enable_defender_for_dns            = optional(bool, true)
-          enable_defender_for_key_vault      = optional(bool, true)
-          enable_defender_for_oss_databases  = optional(bool, true)
-          enable_defender_for_servers        = optional(bool, true)
-          enable_defender_for_sql_servers    = optional(bool, true)
-          enable_defender_for_sql_server_vms = optional(bool, true)
-          enable_defender_for_storage        = optional(bool, true)
+          email_security_contact                                = optional(string, "security_contact@replace_me")
+          enable_defender_for_apis                              = optional(bool, true)
+          enable_defender_for_app_services                      = optional(bool, true)
+          enable_defender_for_arm                               = optional(bool, true)
+          enable_defender_for_containers                        = optional(bool, true)
+          enable_defender_for_cosmosdbs                         = optional(bool, true)
+          enable_defender_for_cspm                              = optional(bool, true)
+          enable_defender_for_dns                               = optional(bool, true)
+          enable_defender_for_key_vault                         = optional(bool, true)
+          enable_defender_for_oss_databases                     = optional(bool, true)
+          enable_defender_for_servers                           = optional(bool, true)
+          enable_defender_for_servers_vulnerability_assessments = optional(bool, true)
+          enable_defender_for_sql_servers                       = optional(bool, true)
+          enable_defender_for_sql_server_vms                    = optional(bool, true)
+          enable_defender_for_storage                           = optional(bool, true)
         }), {})
       }), {})
     }), {})
@@ -69,23 +74,28 @@ variable "configure_management_resources" {
           enable_solution_for_sql_advanced_threat_detection = true
           enable_solution_for_updates                       = true
           enable_solution_for_vm_insights                   = true
+          enable_solution_for_container_insights            = true
           enable_sentinel                                   = true
         }
       }
       security_center = {
         enabled = true
         config = {
-          email_security_contact             = "security_contact@replace_me"
-          enable_defender_for_app_services   = true
-          enable_defender_for_arm            = true
-          enable_defender_for_containers     = true
-          enable_defender_for_dns            = true
-          enable_defender_for_key_vault      = true
-          enable_defender_for_oss_databases  = true
-          enable_defender_for_servers        = true
-          enable_defender_for_sql_servers    = true
-          enable_defender_for_sql_server_vms = true
-          enable_defender_for_storage        = true
+          email_security_contact                                = "security_contact@replace_me"
+          enable_defender_for_apis                              = true
+          enable_defender_for_app_services                      = true
+          enable_defender_for_arm                               = true
+          enable_defender_for_containers                        = true
+          enable_defender_for_cosmosdbs                         = true
+          enable_defender_for_cspm                              = true
+          enable_defender_for_dns                               = true
+          enable_defender_for_key_vault                         = true
+          enable_defender_for_oss_databases                     = true
+          enable_defender_for_servers                           = true
+          enable_defender_for_servers_vulnerability_assessments = true
+          enable_defender_for_sql_servers                       = true
+          enable_defender_for_sql_server_vms                    = true
+          enable_defender_for_storage                           = true
         }
       }
     }
@@ -196,8 +206,8 @@ variable "configure_connectivity_resources" {
                       ), [])
                       revoked_certificate = optional(list(
                         object({
-                          name             = string
-                          public_cert_data = string
+                          name       = string
+                          thumbprint = string
                         })
                       ), [])
                       radius_server_address = optional(string, null)
@@ -230,6 +240,7 @@ variable "configure_connectivity_resources" {
               enabled = optional(bool, false)
               config = optional(object({
                 address_prefix                = optional(string, "")
+                address_management_prefix     = optional(string, "")
                 enable_dns_proxy              = optional(bool, true)
                 dns_servers                   = optional(list(string), [])
                 sku_tier                      = optional(string, "Standard")
@@ -263,6 +274,15 @@ variable "configure_connectivity_resources" {
                 next_hop_ip_address = string
               })
             ), [])
+            routing_intent = optional(object({
+              enabled = optional(bool, false)
+              config = optional(object({
+                routing_policies = optional(list(object({
+                  name         = string
+                  destinations = list(string)
+                })), [])
+              }), {})
+            }), {})
             expressroute_gateway = optional(object({
               enabled = optional(bool, false)
               config = optional(object({
@@ -436,6 +456,7 @@ variable "configure_connectivity_resources" {
               enabled = false
               config = {
                 address_prefix                = "10.100.0.0/24"
+                address_management_prefix     = ""
                 enable_dns_proxy              = true
                 dns_servers                   = []
                 sku_tier                      = ""
@@ -464,6 +485,12 @@ variable "configure_connectivity_resources" {
             location       = ""
             sku            = ""
             routes         = []
+            routing_intent = {
+              enabled = false
+              config = {
+                routing_policies = []
+              }
+            }
             expressroute_gateway = {
               enabled = false
               config = {
@@ -609,4 +636,10 @@ variable "subscription_id_identity" {
   type        = string
   description = "If specified, identifies the Platform subscription for \"Identity\" for resource deployment and correct placement in the Management Group hierarchy."
   default     = null
+}
+
+variable "strict_subscription_association" {
+  type        = bool
+  description = "If set to true, subscriptions associated to management groups will be exclusively set by the module and any added by another process will be removed. If set to false, the module will will only enforce association of the specified subscriptions and those added to management groups by other processes will not be removed. Default is false as this works better with subscription vending."
+  default     = true
 }
