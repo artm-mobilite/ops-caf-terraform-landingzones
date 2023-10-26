@@ -15,9 +15,14 @@ output "objects" {
           "azurerm_firewall_policies" = {
             for key, value in module.enterprise_scale.azurerm_firewall_policy.connectivity : value.location => value
           }
+          # fix: terraform-azurerm-caf supermodule reads remote_objects.private_dns not private_dns_zones. Keep private_dns_zones for backward compatibility
           "private_dns_zones" = {
             for key, value in module.enterprise_scale.azurerm_private_dns_zone.connectivity : value.name => value
           }
+          "private_dns" = {
+            for key, value in module.enterprise_scale.azurerm_private_dns_zone.connectivity : value.name => value
+          }
+          #
           "virtual_network_gateways" = {
             for key, value in module.enterprise_scale.azurerm_virtual_network_gateway.connectivity : value.name => value
           }
