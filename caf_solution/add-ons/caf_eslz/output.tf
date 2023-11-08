@@ -4,7 +4,7 @@ output "objects" {
       {
         (var.landingzone.key) = {
           "vnets" = {
-            for key, value in module.enterprise_scale.azurerm_virtual_network.connectivity : value.location => value
+            for key, value in module.enterprise_scale.azurerm_virtual_network.connectivity : value.location => merge(value, { subnets = { for subnet in value.subnet : subnet.name => subnet } })
           }
           "virtual_subnets" = {
             for key, value in module.enterprise_scale.azurerm_subnet.connectivity : value.name => value
