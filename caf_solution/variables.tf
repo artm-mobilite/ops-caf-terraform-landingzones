@@ -142,6 +142,11 @@ variable "resource_groups" {
   default     = {}
 }
 
+variable "resource_provider_registration" {
+  description = "Resource provider registration configuration objects"
+  default     = {}
+}
+
 variable "subscriptions" {
   default = {}
 }

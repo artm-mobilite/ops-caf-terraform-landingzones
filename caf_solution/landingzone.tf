@@ -47,6 +47,7 @@ module "solution" {
   random_strings                        = var.random_strings
   remote_objects                        = local.remote
   resource_groups                       = var.resource_groups
+  resource_provider_registration        = var.resource_provider_registration
   role_mapping                          = var.role_mapping
   security                              = local.security
   shared_services                       = local.shared_services
