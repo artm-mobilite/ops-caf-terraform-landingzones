@@ -46,3 +46,6 @@ variable "azuread_service_principals" {
 variable "azuread_users" {
   default = {}
 }
+variable "azuread_service_principal_token_signing_certificates" {
+  default = {}
+}
