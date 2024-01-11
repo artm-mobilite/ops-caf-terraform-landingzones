@@ -15,6 +15,7 @@ locals {
       monitor_autoscale_settings                = var.monitor_autoscale_settings
       monitor_metric_alert                      = var.monitor_metric_alert
       monitor_private_link_scope                = var.monitor_private_link_scope
+      monitor_dashboard_grafana                 = var.monitor_dashboard_grafana
       monitoring                                = var.monitoring
       packer_build                              = var.packer_build
       packer_managed_identity                   = var.packer_managed_identity

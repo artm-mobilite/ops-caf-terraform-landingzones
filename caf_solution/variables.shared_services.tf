@@ -52,6 +52,10 @@ variable "monitor_activity_log_alert" {
   default = {}
 }
 
+variable "monitor_dashboard_grafana" {
+  default = {}
+}
+
 variable "monitoring" {
   default = {}
 }
