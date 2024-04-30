@@ -3,6 +3,7 @@ locals {
     var.shared_services,
     {
       automation_log_analytics_links                   = var.automation_log_analytics_links
+      automation_job_schedules                         = var.automation_job_schedules
       automation_runbooks                              = var.automation_runbooks
       automation_schedules                             = var.automation_schedules
       automation_software_update_configurations        = var.automation_software_update_configurations

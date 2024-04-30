@@ -12,6 +12,10 @@ variable "automations" {
   default = {}
 }
 
+variable "automation_job_schedules" {
+  default = {}
+}
+
 variable "automation_schedules" {
   default = {}
 }
