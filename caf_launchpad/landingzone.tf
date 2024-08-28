@@ -71,7 +71,8 @@ module "launchpad" {
   }
 
   security = {
-    keyvault_keys = var.keyvault_keys
+    keyvault_keys        = var.keyvault_keys
+    disk_encryption_sets = var.disk_encryption_sets
   }
 
   storage = local.storage
