@@ -7,7 +7,7 @@ terraform {
     }
     azapi = {
       source  = "Azure/azapi"
-      version = ">= 1.7.0"
+      version = "~> 1.13.0"
     }
   }
   required_version = ">= 1.3.5"
